@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 interface itemStructure{
-id:number,
-  name:string,
+  _id:string,
+  task:string,
   priority:string,
   status:string,
   start:string,
-  end:string
-
+  end:string,
+  __v:number|string
 
 }
+
+  
 
 interface props{
   items:itemStructure[]
@@ -19,19 +21,19 @@ interface props{
 
 
 export const List:React.FC <props>= ({items,setSelectItem}) => {
-  let selectedTask:itemStructure|undefined;
+
   const getTask=(e: React.SyntheticEvent<EventTarget>)=>{
-  
-let Id=(e.target as HTMLButtonElement).value
+  let Id:string;
+ Id=(e.target as HTMLButtonElement).value
     console.log((e.target as HTMLButtonElement).value)
-    selectedTask=items.filter((item)=>item.id==Number(Id))
+   let  selectedTask=items.filter((item)=>item._id==Id)
     console.log(selectedTask)
-    setSelectItem(selectedTask)
+    setSelectItem(selectedTask[0])
     }
   return (
     <div  style={{width:'30%',height:'100%',background:'red'}}>
 {items.map((item)=>(
-<li key={item.name}>{item.name} --  {item.priority}--{item.status}  <button value={item.id} onClick={getTask}>view</button> </li>
+<li key={item.task}>{item.task} --  {item.priority}--{item.status}  <button value={item._id} onClick={getTask}>view</button> </li>
 
 ))}
 
