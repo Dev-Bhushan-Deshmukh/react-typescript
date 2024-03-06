@@ -22,8 +22,9 @@ interface props {
   items: itemStructure[];
   selectedItem: itemStructure | undefined;
   setSelectItem:React.Dispatch<React.SetStateAction<itemStructure | undefined>>
+  setTrigger:React.Dispatch<React.SetStateAction<boolean>>
 }
-export const EditForm: React.FC<props> = ({ items, selectedItem,setSelectItem }) => {
+export const EditForm: React.FC<props> = ({ items, selectedItem,setSelectItem,setTrigger }) => {
 
   const[task_,setTask_]=useState<string|undefined>()
   const[priority_,setPriority_]=useState<string|undefined>()
@@ -49,7 +50,6 @@ let data:apiRequest={
   end: end_,
 }
 
-console.log(`http://localhost:8080/update_one/${(e.target as HTMLButtonElement).value}`)
 
   let response=await fetch(`http://localhost:8080/update_one/${(e.target as HTMLButtonElement).value}`,{
 method:'PUT',
@@ -63,6 +63,35 @@ body: JSON.stringify(data),
   })
   let response_json= await response.json()
   console.log('updated ',response_json)
+
+  setTask_(response_json?.task)
+    setPriority_(response_json?.priority)
+    setStatus_(response_json?.status)
+    setStart_(response_json?.start)
+    setEnd_(response_json?.end)
+
+
+
+    setTrigger(prev=>(!prev))
+}
+
+const deleteTask=async(e:SyntheticEvent)=>{
+
+
+  let response=await fetch(`http://localhost:8080/delete_one/${(e.target as HTMLButtonElement).value}`,{
+    method:'DELETE'
+  })
+  let response_json= await response.json()
+  console.log('deleted ',response_json)
+
+  setTrigger(prev=>(!prev))
+  setTask_(undefined)
+    setPriority_(undefined)
+    setStatus_(undefined)
+    setStart_(undefined)
+    setEnd_(undefined)
+
+
 
 
 }
@@ -90,7 +119,7 @@ body: JSON.stringify(data),
       <input value={start_} onChange={(e)=>setStart_((e.target as HTMLInputElement).value)}  type="text"/> 
       <input value= {end_} onChange={(e)=>setEnd_((e.target as HTMLInputElement).value)}  type="text"/>
       <button value={selectedItem?._id} onClick={updateTask}>Update</button>
-      <button value={selectedItem?._id}>Delete</button>
+      <button value={selectedItem?._id} onClick={deleteTask}>Delete</button>
     </div>
   );
 };

@@ -21,7 +21,7 @@ const[items,setItems]=useState<itemStructure[]>([])
 
 const[selectedItem,setSelectItem]=useState<itemStructure|undefined>()
 
-
+const[trigger,setTrigger]=useState<boolean>(true)
 const  fetchData=async()=> {
   let response=await fetch('http://localhost:8080/')
   let response_json= await response.json()
@@ -40,7 +40,7 @@ fetchData()
 
 
 
-},[])
+},[trigger])
 // setItems(itemList)
 
   return (
@@ -55,7 +55,7 @@ fetchData()
     }}>
 {/* {selectedItem?.id} */}
 <List items={items} setSelectItem={setSelectItem}  />
-<EditForm selectedItem={selectedItem}  items={items} setSelectItem={setSelectItem}/>
+<EditForm selectedItem={selectedItem} setTrigger={setTrigger}  items={items} setSelectItem={setSelectItem}/>
 
 
 
